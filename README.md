@@ -12,6 +12,7 @@ Device HeartRate actuator
 Search Service
 ```http://localhost:8080/actuator```
 
+Search Call Example
 ```POST http://localhost:8080/api/v1/search
    Content-Type: application/json
    
