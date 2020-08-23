@@ -1,0 +1,197 @@
+version: '3.7'
+services:
+  artemis:
+    image: vromero/activemq-artemis
+    environment:
+      - INFLUXDB_DB=db0
+      - ARTEMIS_USERNAME=admin
+      - ARTEMIS_PASSWORD=admin
+    ports:
+      - 8161:8161
+      - 61616:61616
+    networks:
+      - broker
+
+  influx:
+    image: influxdb:1.7.7
+    container_name: influx
+    environment:
+      - INFLUXDB_DB=db0
+      - INFLUXDB_ADMIN_USER=admin
+      - INFLUXDB_ADMIN_PASSWORD=admin
+    ports:
+      - 8086:8086
+    networks:
+    - db
+    volumes:
+      - $PWD/influx:/var/lib/influxdb
+  heart_rate_device:
+    build:
+      context: device
+      dockerfile: Dockerfile
+    networks:
+      - broker
+    container_name: heart_rate_device
+    depends_on:
+      - artemis
+    expose:
+      - 8081
+    ports:
+      - 8081:8080
+    environment:
+      - DEVICE_TYPE=HEART_RATE_METER
+      - SPRING_PROFILES_ACTIVE=docker
+      #- LOGGING_LEVEL_ROOT=DEBUG
+    restart: unless-stopped
+
+  heart_rate_processor:
+      build:
+        context: processor
+        dockerfile: Dockerfile
+      networks:
+        - broker
+        - db
+      container_name: heart_rate_processor
+      depends_on:
+        - artemis
+        - influx
+      expose:
+        - 9081
+      ports:
+        - 9081:9080
+      environment:
+        - DEVICE_TYPE=HEART_RATE_METER
+        - SPRING_PROFILES_ACTIVE=docker
+      restart: unless-stopped
+
+  thermostat_device:
+    build:
+      context: device
+      dockerfile: Dockerfile
+    networks:
+      - broker
+    container_name: thermostat_device
+    depends_on:
+      - artemis
+    expose:
+      - 8082
+    ports:
+      - 8082:8080
+    environment:
+      - DEVICE_TYPE=THERMOSTAT
+      - SPRING_PROFILES_ACTIVE=docker
+      #- LOGGING_LEVEL_ROOT=DEBUG
+    restart: unless-stopped
+
+  thermostat_processor:
+      build:
+        context: processor
+        dockerfile: Dockerfile
+      networks:
+        - broker
+        - db
+      container_name: thermostat_processor
+      depends_on:
+        - artemis
+        - influx
+      expose:
+        - 9082
+      ports:
+        - 9082:9080
+      environment:
+        - DEVICE_TYPE=THERMOSTAT
+        - SPRING_PROFILES_ACTIVE=docker
+      restart: unless-stopped
+
+  car_fuel_reading_device:
+    build:
+      context: device
+      dockerfile: Dockerfile
+    networks:
+      - broker
+    container_name: car_fuel_reading_device
+    depends_on:
+      - artemis
+    expose:
+      - 8083
+    ports:
+      - 8083:8080
+    environment:
+      - DEVICE_TYPE=CAR_FUEL_READING
+      - SPRING_PROFILES_ACTIVE=docker
+      #- LOGGING_LEVEL_ROOT=DEBUG
+    restart: unless-stopped
+
+  car_fuel_reading_processor:
+      build:
+        context: processor
+        dockerfile: Dockerfile
+      networks:
+        - broker
+        - db
+      container_name: car_fuel_reading_processor
+      depends_on:
+        - artemis
+        - influx
+      expose:
+        - 9083
+      ports:
+        - 9083:9080
+      environment:
+        - DEVICE_TYPE=CAR_FUEL_READING
+        - SPRING_PROFILES_ACTIVE=docker
+      restart: unless-stopped
+
+  search_service:
+        build:
+          context: search
+          dockerfile: Dockerfile
+        networks:
+          - db
+        container_name: search_service
+        depends_on:
+          - artemis
+          - influx
+        expose:
+          - 8080
+        ports:
+          - 8080:10080
+        environment:
+          - SPRING_PROFILES_ACTIVE=docker
+        restart: unless-stopped
+
+
+#  thermostat_device:
+#    build:
+#      context: device
+#      dockerfile: Dockerfile
+#    network_mode: bridge
+#    container_name: thermostat_device
+#    depends_on:
+#      - activemq
+#    expose:
+#      - 8080
+#    ports:
+#      - 8082:8080
+#    environment:
+#      - JAVA_OPTS="-Ddevice.type=THERMOSTAT"
+#    restart: unless-stopped
+#  car_fuel_device:
+#    build:
+#      context: device
+#      dockerfile: Dockerfile
+#    network_mode: bridge
+#    container_name: car_fuel_devicecd
+#    depends_on:
+#      - activemq
+#    expose:
+#      - 8080
+#    ports:
+#      - 8083:8080
+#    environment:
+#      - JAVA_OPTS="-Ddevice.type=CAR_FUEL_READING"
+#    restart: unless-stopped
+
+networks:
+  broker:
+  db:

@@ -1,0 +1,22 @@
+POST http://localhost:8080/api/v1/search
+Content-Type: application/json
+
+
+{
+    "deviceType": "THERMOSTAT",
+    "deviceIds":["c89c9045-040d-4f20-94d8-6490733331a9"],
+    "from": "2020-08-23T17:30:00Z",
+    "to": "2020-08-24T17:35:00Z"
+}
+
+###
+
+POST http://localhost:8080/api/v1/search
+Content-Type: application/json
+
+
+{
+    "deviceType": "HEART_RATE_METER"
+}
+
+###

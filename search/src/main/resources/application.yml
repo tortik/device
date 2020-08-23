@@ -1,0 +1,23 @@
+server:
+  port: 10080
+  error.include-message: always
+
+spring:
+  profiles:
+    active: local
+
+---
+spring:
+  profiles: docker
+  influx:
+    url: http://influx:8086
+    db: db0
+---
+spring:
+  profiles: local
+  influx:
+    url: http://localhost:8086
+    db: db0
+---
+
+logging.level.com.rely42: DEBUG

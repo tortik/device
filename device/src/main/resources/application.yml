@@ -1,0 +1,38 @@
+app.instance-id: ${random.uuid}
+spring:
+  profiles:
+    active: local
+---
+spring:
+  profiles: docker
+  artemis:
+    mode: native
+    host: artemis
+    port: 61616
+    user: admin
+    password: admin
+---
+spring:
+  profiles: local
+  artemis:
+    mode: native
+    host: localhost
+    port: 61616
+    user: admin
+    password: admin
+---
+
+device:
+  id: ${random.uuid}
+  type: THERMOSTAT
+  message-count-limit: 10
+  message-bound-limit: 100
+
+  topic:
+    THERMOSTAT: EM_JMS_THERMOSTAT.T
+    HEART_RATE_METER: EM_JMS_HEART_RATE_METER.T
+    CAR_FUEL_READING: EM_JMS_CAR_FUEL_READING.T
+
+
+logging.level.com.rely42: DEBUG
+#logging.level.root: DEBUG

@@ -1,0 +1,40 @@
+app.instance-id: ${random.uuid}
+server.port: 9080
+
+
+spring:
+  influx:
+    db: db0
+---
+spring:
+  profiles: docker
+  artemis:
+    mode: native
+    host: artemis
+    port: 61616
+    user: admin
+    password: admin
+  influx:
+    url: http://influx:8086
+---
+spring:
+  profiles: local
+  artemis:
+    mode: native
+    host: localhost
+    port: 61616
+    user: admin
+    password: admin
+  influx:
+    url: http://localhost:8086
+---
+device:
+  type: THERMOSTAT
+  destination: EM_JMS_THERMOSTAT.T
+  topic:
+    THERMOSTAT: EM_JMS_THERMOSTAT.T
+    HEART_RATE_METER: EM_JMS_HEART_RATE_METER.T
+    CAR_FUEL_READING: EM_JMS_CAR_FUEL_READING.T
+
+logging.level.com.rely42: DEBUG
+#logging.level.root: DEBUG
