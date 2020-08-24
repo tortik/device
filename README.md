@@ -1,6 +1,8 @@
 # Architecture
 Basic pub-sub (topic per device type) with time series DB as a data store.
 
+Every app is based on hexagon/onion architecture
+
 ## Scale
 1. New device type? - add a topic.
 2. Publishers scale? - we can have robin-bobin with multiple topics
