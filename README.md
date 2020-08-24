@@ -17,16 +17,20 @@ How we gonna authorize clients? Per device owners or set of roles, attributes
 
 # How to Run
 Requirements: Docker
+
 Run ```run.sh``` script that should bring up multiple devices and consumers with broker and database
 
 
 # Reference
 Artemis console (admin/admin):
 ```http://localhost:8161/console```
+
 Processor app actuator
 ```http://localhost:9080/actuator```
+
 Device HeartRate actuator
 ```http://localhost:8081/actuator```
+
 Search Service
 ```http://localhost:8080/actuator```
 
