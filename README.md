@@ -11,8 +11,11 @@ Basic pub-sub (topic per device type) with time series DB as a data store.
 
 ## Security 
 There is only network level security inside docker and basic authentication for broker and DB
+
 For having secure WebService I would require more requirements.
+
 What authentication type? Do we need basic per each call or OAuth with tokens
+
 How we gonna authorize clients? Per device owners or set of roles, attributes
 
 # How to Run
